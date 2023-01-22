@@ -13,7 +13,7 @@ export class AppComponent {
   newusername = prompt('enter user name')
   private socket;
   constructor() {
-      this.socket = io('http://localhost:3000');
+      this.socket = io('http://localhost:8000');
   }
   newUser(){
   this.socket.emit('new-user-joined', this.newusername)
