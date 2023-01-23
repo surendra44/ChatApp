@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { SocketioService } from './socketio.service';
-
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -9,26 +9,30 @@ import { SocketioService } from './socketio.service';
 })
 export class AppComponent implements OnInit,AfterViewInit {
   title = 'chatApp';
-  messages =[]
+  messages:any=[]
+  msgdata:any=[]
   newusername = prompt('enter user name')
-  constructor(public socketService:SocketioService) {
-    
+
+  constructor(public socketService:SocketioService) { 
   }
-  ngOnInit(): void {
-    // this.socketService.newUser(this.newusername)
-    // console.log(this.newusername)
-  }
-  ngAfterViewInit(): void {
+  ngOnInit() {
     this.socketService.newUser(this.newusername)
     console.log(this.newusername)
   }
-  receivemsg(){
-    this.socketService.listenmsg()
+  ngAfterViewInit(): void {
+    
+    // this.socketService.socket.on('receive', (data) => {
+    //   console.log(data,'received on frontend')
+    //   this.msgdata = data
+    // })
   }
-  sendmsg(data:any){
-    this.socketService.sendmsg(data.value)
-  }
-
-  
-
+  listenmsg(){
+    this.msgdata = new Observable((observer) => {
+      this.socketService.socket.on('receive', (data) => {
+        observer.next(data);
+        // this.messages.push(data)
+      });
+    });
+    console.log(this.msgdata)
+}
 }
