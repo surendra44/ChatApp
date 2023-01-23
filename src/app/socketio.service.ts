@@ -7,7 +7,7 @@ export class SocketioService {
 
 private socket;
 constructor() {
-    this.socket = io('http://localhost:8080');
+    this.socket = io('http://localhost:8000');
 }
 newUser(newusername:any){
   this.socket.emit('new-user-joined',newusername)
@@ -16,7 +16,7 @@ newUser(newusername:any){
   listenmsg(){
   this.socket.on('receive', (data) => {
     console.log(data);
-  });
+  }); 
   }
   sendmsg(data:any){ 
     console.log(data.value,'input msg')
