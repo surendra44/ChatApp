@@ -11,10 +11,8 @@
     </div>
 </div>
     <div class="message-input">
-      <form>
         <input placeholder="Enter your message..." #inputmsg>
-        <button type="submit" (click)="sendmsg(inputmsg.value)">Send</button>
-      </form>
+        <button type="submit" (click)="socketService.sendmsg(inputmsg)">Send</button>
     </div>
 </div>
   

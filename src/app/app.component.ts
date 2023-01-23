@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import  {io} from 'socket.io-client';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { SocketioService } from './socketio.service';
 
 
 @Component({
@@ -7,27 +7,28 @@ import  {io} from 'socket.io-client';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit,AfterViewInit {
   title = 'chatApp';
   messages =[]
   newusername = prompt('enter user name')
-  private socket;
-  constructor() {
-      this.socket = io('http://localhost:8000');
+  constructor(public socketService:SocketioService) {
+    
   }
-  newUser(){
-  this.socket.emit('new-user-joined', this.newusername)
-    console.log(this.newusername);
-  
+  ngOnInit(): void {
+    // this.socketService.newUser(this.newusername)
+    // console.log(this.newusername)
   }
-  listenmsg(){
-  this.socket.on('receive', (data) => {
-    console.log(data);
-  });
+  ngAfterViewInit(): void {
+    this.socketService.newUser(this.newusername)
+    console.log(this.newusername)
+  }
+  receivemsg(){
+    this.socketService.listenmsg()
   }
   sendmsg(data:any){
-    console.log(data,'input msg')
-    this.socket.emit('send', data);
+    this.socketService.sendmsg(data.value)
   }
+
+  
 
 }
