@@ -45,7 +45,12 @@ flex-direction: column;
     flex-direction: column;
 }
 .msg{
-    background-color: rgb(175, 174, 174);
+    background-color: rgb(243, 230, 230);
+    text-decoration: solid;
+    font-size: medium;
+    font-weight: 600;
+    font-style: italic;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     border: 1px solid green;
     border-radius: 5px;
     max-width: 39%;

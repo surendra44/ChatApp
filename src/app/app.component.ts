@@ -1,53 +1,53 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { SocketioService } from './socketio.service';
-import { Observable } from 'rxjs';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import  {io} from 'socket.io-client';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit,AfterViewInit {
+export class AppComponent implements OnInit, AfterViewInit {
   title = 'chatApp';
   messages:any=[]
   msgdata:any=[]
-  newusername = prompt('enter user name')
-
-  constructor(public socketService:SocketioService) { 
+  
+  public socket;
+  constructor() {
+    this.socket = io('http://localhost:8000');
   }
-  ngOnInit() {
-    this.socketService.newUser(this.newusername)
-    console.log(this.newusername)
+  ngOnInit(): void {
+    let newusername = prompt('enter your name')
+    this.socket.emit('new-user-joined',newusername)
+    // console.log(newusername);
   }
-  appendFn = (message:any)=>{
-    let messagescont = document.querySelector('.messagescont')
-    const messageElement = document.createElement('div')
-    messageElement.innerText= message
-    messageElement.classList.add('msg')
-    messagescont?.append(messageElement)
-
+  sendmsg(data:any){ 
+    // console.log(data.value,'input msg')
+    this.socket.emit('send', data.value);
+    this.msgdata.push(data.value)
+    // console.log(this.msgdata,'sent msgs')
   }
+ 
   ngAfterViewInit(): void {
-    // this.socketService.socket.on('receive', (data) => {
-    //   console.log(data,'received on frontend')
-    //   this.msgdata = data
-    // })
-    this.socketService.socket.on('user-joined',data=>{
-      console.log(data)
-      this.appendFn(data)
+    this.socket.on('user-Joined',(data:any)=>{
+      // console.log(data,'message received')
+      this.messages.push(data)
+      // console.log(this.messages)
     })
-    this.socketService.socket.on('receive',data=>{
-      console.log(data)
-      this.appendFn(data)
+    this.socket.on('receive',(data:any)=>{
+      // console.log(data,'message received')
+      this.messages.push(data)
+      // console.log(this.messages)
+    })
+    this.socket.on('left',(data:any)=>{
+      this.messages.push(data)
+      // console.log(this.messages,data)
     })
   }
-//   listenmsg(){
-//     this.msgdata = new Observable((observer) => {
-//       this.socketService.socket.on('receive', (data) => {
-//         observer.next(data);
-//         // this.messages.push(data)
-//       });
-//     });
-//     console.log(this.msgdata)
-// }
+  connect(){
+    let username = prompt('enter your name')
+    this.socket.emit('new-user-joined',username)
+  }
+  disconnect(){
+    this.socket.emit('user-left')
+  }
 }
