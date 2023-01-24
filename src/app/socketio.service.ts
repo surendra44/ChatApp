@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import  {io} from 'socket.io-client';
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,6 @@ constructor() {
     this.socket.emit('new-user-joined',newusername)
     console.log(newusername);
   }
-  
   
   sendmsg(data:any){ 
     console.log(data.value,'input msg')
