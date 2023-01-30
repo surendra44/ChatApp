@@ -6,7 +6,7 @@ import  {io} from 'socket.io-client';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit, AfterViewInit {
+export class AppComponent implements OnInit, AfterViewInit,OnDestroy{
   title = 'chatApp';
   messages:any=[]
   msgdata:any=[]
@@ -48,6 +48,9 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.socket.emit('new-user-joined',username)
   }
   disconnect(){
+    this.socket.emit('user-left')
+  }
+  ngOnDestroy(){
     this.socket.emit('user-left')
   }
 }
